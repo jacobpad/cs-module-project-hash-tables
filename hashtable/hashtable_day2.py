@@ -50,27 +50,9 @@ class HashTable:
     def fnv1(self, key):
         """
         FNV-1 Hash, 64-bit
-        
-        https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
-        
-        algorithm fnv-1 is
-            hash := FNV_offset_basis do
-            for each byte_of_data to be hashed
-                hash := hash × FNV_prime
-                hash := hash XOR byte_of_data
-            return hash 
         """
-        FNV_offset_basis = 14695981039346656037
-        FNV_prime = 1099511628211
 
-        for byte in key:
-            FNV_offset_basis += FNV_offset_basis * FNV_prime
-            '''
-            `^, the caret, used in several programming languages, such as C, C++, C#, D, Java, Perl, Ruby, PHP and Python, denoting the bitwise XOR operator; not used outside of programming contexts because it is too easily confused with other uses of the caret` 
-            From : https://en.wikipedia.org/wiki/Exclusive_or
-            '''
-            FNV_offset_basis = FNV_offset_basis ^ ord(byte)
-        return FNV_offset_basis
+        # Your code here
 
     def djb2(self, key):
         """
@@ -94,8 +76,8 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        return self.fnv1(key) % self.capacity
-        # return self.djb2(key) % self.capacity
+        #return self.fnv1(key) % self.capacity
+        return self.djb2(key) % self.capacity
 
     def put(self, key, value):
         """
@@ -114,6 +96,7 @@ class HashTable:
         if self.storage[index]:
             return self.storage[index].value
         return None
+
 
     def delete(self, key):
         """

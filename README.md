@@ -1,6 +1,6 @@
 # Hash Tables
 
-## Day 1
+## Day 1 - [Amazing Resource video](https://youtu.be/ea8BRGxGmlA)  
 
 Task: Implement a basic hash table without collision resolution.
 
@@ -30,7 +30,7 @@ The above test program is _unlikely_ to have collisions, but it's
 certainly possible for various hashing functions. With DJB2 (32 bit) and
 FNV-1 (64 bit) hashing functions, there are no collisions.
 
-## Day 2
+## Day 2 - [Amazing Resource video](https://youtu.be/54iv1si4YCM)
 
 Task: Implement linked-list chaining for collision resolution.
 
