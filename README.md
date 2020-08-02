@@ -1,4 +1,4 @@
-# Hash Tables
+# Hash Tables - [Colab](https://colab.research.google.com/drive/1WlNbX8UOCHUpXuhYaF1sejF8sOZMTD77?usp=sharing)
 
 ## Day 1 - [Amazing Resource video](https://youtu.be/ea8BRGxGmlA)  
 
