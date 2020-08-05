@@ -27,3 +27,5 @@ ghcyr.
 
 (That's encrypted with ROT13--Google `rot13 decoder` to decode it if you
 want the hint.)
+
+According to [rot13.com](rot13.com) it means: "In Python, a dict key can be any immutable type... including a tuple."
