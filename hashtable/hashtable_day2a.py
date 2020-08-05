@@ -1,29 +1,34 @@
-d='-'*75
+d = '-'*75
 print(f'{d}\n')
+
+
 class HashTableEntry:
     """
     Linked List hash table key/value pair
     """
+
     def __init__(self, key, value):
         self.key = key
         self.value = value
         self.next = None
 
 
-# Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
 
 
 class HashTable:
     """
     A hash table that with `capacity` buckets
-    that accepts string keys.
+    that accepts string key
     """
 
     def __init__(self, capacity):
-        self.capacity = capacity
-        self.storage = [None]*capacity
-        # self.size = 0
+        if capacity > MIN_CAPACITY:
+            self.capacity = capacity
+        else:
+            self.capacity = MIN_CAPACITY
+        self.bucket = [None] * capacity
+        self.count = 0
 
     def get_num_slots(self):
         """
@@ -32,20 +37,13 @@ class HashTable:
         but the number of slots in the main list.)
         One of the tests relies on this.
         """
-        # Your code here
+        return self.capacity
 
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
         """
-        # Your code here
-    
-    def resize(self, new_capacity):
-        """
-        Changes the capacity of the hash table and
-        rehashes all key/value pairs.
-        """
-        # Your code here
+        return self.count / self.get_num_slots()
 
     def fnv1(self, key):
         """
@@ -106,17 +104,27 @@ class HashTable:
         Hash collisions should be handled with Linked List Chaining.
         """
         index = self.hash_index(key)
-        self.storage[index] = HashTableEntry(key, value)
-        
-    def get(self, key):
-        """
-        Retrieve the value stored with the given key.
-        Returns None if the key is not found.
-        """
-        index = self.hash_index(key)
-        if self.storage[index]:
-            return self.storage[index].value
-        return None
+        entry = HashTableEntry(key, value)
+        if self.bucket[index] is None:
+            self.bucket[index] = entry
+            self.count += 1
+            if self.get_load_factor() > 0.7:
+                self.resize(self.count * 2)
+            return
+        else:  # Collision
+            prev = None
+            current = self.bucket[index]
+            while current:
+                if current.key == key:  # Overwrite
+                    current.value = value
+                    return
+                prev = current
+                current = current.next
+            prev.next = entry
+            self.count += 1
+            if self.get_load_factor() > 0.7:
+                self.resize(self.count * 2)
+            return
 
     def delete(self, key):
         """
@@ -124,7 +132,58 @@ class HashTable:
         Print a warning if the key is not found.
         """
         index = self.hash_index(key)
-        self.storage[index] = None
+        current = self.bucket[index]
+        prev = None
+        while current:
+            if current.key == key:
+                if prev:
+                    prev.next = current.next
+                    self.count -= 1
+                    if self.get_load_factor() < 0.2:
+                        self.resize(self.count * 2)
+                    return
+                else:
+                    self.bucket[index] = current.next
+                    self.count -= 1
+                    if self.get_load_factor() < 0.2:
+                        self.resize(self.count * 2)
+                    return
+            prev = current
+            current = current.next
+        return None
+
+    def get(self, key):
+        """
+        Retrieve the value stored with the given key.
+        Returns None if the key is not found.
+        """
+        index = self.hash_index(key)
+        current = self.bucket[index]
+        while current:
+            if current.key == key:
+                return current.value
+            current = current.next
+        return None
+
+    def resize(self, new_capacity):
+        """
+        Changes the capacity of the hash table and
+        rehashes all key/value pairs.
+        """
+        if new_capacity < MIN_CAPACITY:
+            new_capacity = MIN_CAPACITY
+        old_bucket = self.bucket
+        self.capacity = new_capacity
+        self.bucket = [None] * new_capacity
+        self.count = 0
+
+        # Rehashing
+        for item in old_bucket:
+            current = item
+            while current:
+                self.put(current.key, current.value)
+                current = current.next
+
 
 if __name__ == "__main__":
     ht = HashTable(8)
@@ -161,7 +220,5 @@ if __name__ == "__main__":
 
     print("")
 
-
     print(d)
     print(ht.get('line_1'))
-    print(ht)
