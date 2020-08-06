@@ -1,5 +1,17 @@
 def no_dups(s):
-    # Your code here
+    cache = {}
+    results = ''
+
+    for i in s.split():
+        if i not in cache and i != '':
+            cache[i]=1
+        elif i != '':
+            cache[i]+=1
+    
+    for i in cache:
+        results += f'{i} '
+
+    return results.strip()
 
 
 
